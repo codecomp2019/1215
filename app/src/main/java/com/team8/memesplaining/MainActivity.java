@@ -59,11 +59,6 @@ public class MainActivity extends AppCompatActivity
 				Log.i(TAG, "Uri: " + uri.toString());
 
 				ImageView imageView = findViewById(R.id.image_view);
-
-				getBitmapFromUri(uri);
-
-				//Bitmap photo = (Bitmap) resultData.getExtras().get("uri");
-				//imageView.setImageBitmap(photo);
 			}
 		}
 	}
