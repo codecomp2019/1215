@@ -1,41 +1,86 @@
 package com.team8.memesplaining;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-import java.io.File;
+import com.mvc.imagepicker.ImagePicker;
 
-public class MainActivity extends AppCompatActivity
-{
 
-	public static final int PICK_IMAGE = 1;
+public class MainActivity extends AppCompatActivity {
 
-	private static final int READ_REQUEST_CODE = 42;
-	@Override
+	Button memeSelect;
+	Button memeProcess;
+	ImageView imageView;
+
+	private static int RESULT_LOAD_MEME = 1;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+
+		// Associate appropriate layout buttons.
+		memeSelect = (Button) findViewById(R.id.button_select_meme);
+		memeProcess = (Button) findViewById(R.id.button_process_meme);
+		imageView = findViewById(R.id.image_view);
+
+
+		// Click listener for the Select Meme button.
+		memeSelect.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Log.d("Button: ", "Select meme clicked");
+				Intent i = new Intent(
+				Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivityForResult(i,RESULT_LOAD_MEME);
+			}
+		});
+
+		// Click listener for the Process Meme button
+		memeProcess.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Log.d("Button: ", "Process meme clicked");
+			}
+		});
+
 	}
 
-	public void onImageGalleryClicked(View v){
-		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 
-		File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-		String pictureDirectorypath = pictureDirectory.getPath();
+		if (requestCode == RESULT_LOAD_MEME && resultCode == RESULT_OK && null != data) {
+			Uri selectedImage = data.getData();
+			Log.d("Image URI: ",selectedImage.toString());
+			String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-		Uri data = Uri.parse(pictureDirectorypath);
+			Cursor cursor = getContentResolver().query(selectedImage,
+					filePathColumn, null, null, null);
+					cursor.moveToFirst();
 
-		photoPickerIntent.setDataAndType(data,"image/*");
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			String picturePath = cursor.getString(columnIndex);
+			cursor.close();
 
-		startActivityForResult(photoPickerIntent,PICK_IMAGE);
+			ImageView imageView = (ImageView) findViewById(R.id.image_view);
+			imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+			Log.d("Image: ", "image set to imageView");
+
+		}
 
 
 	}
 }
+
+
