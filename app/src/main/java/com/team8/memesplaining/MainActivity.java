@@ -24,6 +24,15 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		Button button = findViewById(R.id.button_select_meme);
+		button.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				performFileSearch();
+			}
+		});
 	}
 
 	public void onImageGalleryClicked(View v)
@@ -38,5 +47,14 @@ public class MainActivity extends AppCompatActivity
 		photoPickerIntent.setDataAndType(data, "image/*");
 
 		startActivityForResult(photoPickerIntent, PICK_IMAGE);
+	}
+
+	public void performFileSearch()
+	{
+		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType("image/*");
+
+		startActivityForResult(intent, READ_REQUEST_CODE);
 	}
 }
