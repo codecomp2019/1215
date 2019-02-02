@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Memesplaining</string>
+    <string name="meme_select">Select Meme </string>
+    <string name="meme_process">Process Meme </string>
 </resources>
