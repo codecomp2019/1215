@@ -1,15 +1,21 @@
 package com.team8.memesplaining;
 
 import android.app.Activity;
-import android.content.ContentProvider;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity
 {
+
+	public static final int PICK_IMAGE = 1;
 	private static final int READ_REQUEST_CODE = 42;
 
 	@Override
@@ -20,28 +26,17 @@ public class MainActivity extends AppCompatActivity
 
 	}
 
-	/*
-
-	 */
-	public void performPhotoSearch()
+	public void onImageGalleryClicked(View v)
 	{
-		Intent photoPicker = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-		photoPicker.addCategory(Intent.CATEGORY_OPENABLE);
-		photoPicker.setType("image/*");
-	}
+		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 
-	@Override
-	public void onActivityResult (int requestCode, int resultCode, Intent resultData)
-	{
-		if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK)
-		{
-			Uri uri;
-			if (resultData != null)
-			{
-				uri = resultData.getData();
-				//Log.i(TAG, "Uri: " + uri.toString());
-				//showImage(uri);
-			}
-		}
+		File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+		String pictureDirectorypath = pictureDirectory.getPath();
+
+		Uri data = Uri.parse(pictureDirectorypath);
+
+		photoPickerIntent.setDataAndType(data, "image/*");
+
+		startActivityForResult(photoPickerIntent, PICK_IMAGE);
 	}
 }
