@@ -3,9 +3,12 @@ package com.team8.memesplaining;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +16,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.IOException;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -56,10 +68,16 @@ public class MainActivity extends AppCompatActivity
 				try
 				{
 					Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+					FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
+					Log.i(TAG, "FirebaseVisionImage " + image);
+
+					//recognizeText(image);
+
 				} catch (IOException e)
 				{
 					e.printStackTrace();
 				}
+
 			}
 		}
 	}
@@ -70,5 +88,50 @@ public class MainActivity extends AppCompatActivity
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		intent.setType("image/*");
 		startActivityForResult(intent, READ_REQUEST_CODE);
+	}
+
+	private void recognizeText(FirebaseVisionImage image)
+	{
+
+		FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
+						.getOnDeviceTextRecognizer();
+
+		Task<FirebaseVisionText> result =
+						detector.processImage(image)
+										.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>()
+										{
+											@Override
+											public void onSuccess(FirebaseVisionText firebaseVisionText)
+											{
+												// Task completed successfully
+												// [START_EXCLUDE]
+												// [START get_text]
+												for (FirebaseVisionText.TextBlock block : firebaseVisionText.getTextBlocks())
+												{
+													Rect boundingBox = block.getBoundingBox();
+													Point[] cornerPoints = block.getCornerPoints();
+													String text = block.getText();
+
+													for (FirebaseVisionText.Line line : block.getLines())
+													{
+														// ...
+														for (FirebaseVisionText.Element element : line.getElements())
+														{
+															// ...
+															Log.i(TAG, "text " + text);
+														}
+													}
+												}
+											}
+										})
+										.addOnFailureListener(
+														new OnFailureListener()
+														{
+															@Override
+															public void onFailure(@NonNull Exception e)
+															{
+															}
+														});
+		// [END run_detector]
 	}
 }
