@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_PERMISSION = 1;
 
+	String ocrText = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity
 
 	private void recognizeText(FirebaseVisionImage image)
 	{
+		ocrText = "";
 
 		FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
 						.getOnDeviceTextRecognizer();
@@ -128,10 +130,12 @@ public class MainActivity extends AppCompatActivity
 														for (FirebaseVisionText.Element element : line.getElements())
 														{
 															// ...
-															Log.i(TAG, "text " + text);
 														}
 													}
+													ocrText += text;
+													ocrText += " ";
 												}
+												Log.i(TAG, "OCR Text =  " + ocrText);
 											}
 										})
 										.addOnFailureListener(
@@ -144,40 +148,4 @@ public class MainActivity extends AppCompatActivity
 														});
 
 	}
-/*
-	private void requestReadFilePermission()
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-						&& ContextCompat.checkSelfPermission(mView.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-		{
-			ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-		} else
-		{
-			//permission is already granted - do what you need
-		}
-	}
-	*/
-/*
-	@Override
-	public void onRequestPermissionsResult(int requestCode,
-	                                       String permissions[], int[] grantResults) {
-		switch (requestCode) {
-			case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-				// If request is cancelled, the result arrays are empty.
-				if (grantResults.length > 0
-								&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					// permission was granted, yay! Do the
-					// contacts-related task you need to do.
-				} else {
-					// permission denied, boo! Disable the
-					// functionality that depends on this permission.
-				}
-				return;
-			}
-
-			// other 'case' lines to check for other
-			// permissions this app might request.
-		}
-	}
-	*/
 }
