@@ -2,8 +2,10 @@ package com.team8.memesplaining;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,27 +15,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.mvc.imagepicker.ImagePicker;
-
 
 public class MainActivity extends AppCompatActivity {
 
 	Button memeSelect;
 	Button memeProcess;
 	ImageView imageView;
-
+	Bitmap mBitmap;
 	private static int RESULT_LOAD_MEME = 1;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-
 		// Associate appropriate layout buttons.
 		memeSelect = (Button) findViewById(R.id.button_select_meme);
 		memeProcess = (Button) findViewById(R.id.button_process_meme);
 		imageView = findViewById(R.id.image_view);
 
+		mBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_background);
 
 		// Click listener for the Select Meme button.
 		memeSelect.setOnClickListener(new View.OnClickListener() {
@@ -47,9 +47,12 @@ public class MainActivity extends AppCompatActivity {
 		});
 
 		// Click listener for the Process Meme button
+
+
 		memeProcess.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+
 				Log.d("Button: ", "Process meme clicked");
 			}
 		});
