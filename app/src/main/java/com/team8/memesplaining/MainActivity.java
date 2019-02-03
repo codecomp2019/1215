@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 	private static final int REQUEST_PERMISSION = 1;
 
 	String ocrText = "";
+	private Vibrator myVib;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -49,12 +51,15 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
+
 		Button button = findViewById(R.id.button_select_meme);
 		button.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
+				myVib.vibrate(50);
 				performFileSearch();
 			}
 		});
