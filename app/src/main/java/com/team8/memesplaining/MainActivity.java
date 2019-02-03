@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_PERMISSION = 1;
 	private TextToSpeech mTTS;
+	private Vibrator myVib;
 
 	String ocrText = "";
 
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		setContentView(R.layout.activity_main);
 
 		Button button = findViewById(R.id.button_select_meme);
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity
 			@Override
 			public void onClick(View v)
 			{
+				myVib.vibrate(50);
 				performFileSearch();
 			}
 		});
