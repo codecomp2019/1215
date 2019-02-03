@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "92549291191",
+    "firebase_url": "https://memesplaining-7144f.firebaseio.com",
+    "project_id": "memesplaining-7144f",
+    "storage_bucket": "memesplaining-7144f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92549291191:android:5f915ff20fd995e1",
+        "android_client_info": {
+          "package_name": "com.team8.memesplaining"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92549291191-2ba54juvt23iul1utcc3b6ccj93scvj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsqaBCLlX0PsmPSn6VisoHmvrtIFkD_nw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
