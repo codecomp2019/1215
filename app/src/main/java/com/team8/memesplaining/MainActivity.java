@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity
 	private static final int READ_REQUEST_CODE = 42;
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_PERMISSION = 1;
+	private TextToSpeech mTTS;
 
 	String ocrText = "";
 
@@ -56,6 +59,22 @@ public class MainActivity extends AppCompatActivity
 			public void onClick(View v)
 			{
 				performFileSearch();
+			}
+		});
+		// initialize TTS engine
+		mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+			@Override
+			public void onInit(int status) {
+				if (status == TextToSpeech.SUCCESS) {
+					int result = mTTS.setLanguage(Locale.US);
+
+					if (result == TextToSpeech.LANG_MISSING_DATA
+							|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
+						Log.e("TTS", "Language not supported");
+					}
+				} else {
+					Log.e("TTS", "Initialization failed");
+				}
 			}
 		});
 	}
@@ -124,6 +143,8 @@ public class MainActivity extends AppCompatActivity
 													Point[] cornerPoints = block.getCornerPoints();
 													String text = block.getText();
 
+
+
 													for (FirebaseVisionText.Line line : block.getLines())
 													{
 														// ...
@@ -136,6 +157,9 @@ public class MainActivity extends AppCompatActivity
 													ocrText += " ";
 												}
 												Log.i(TAG, "OCR Text =  " + ocrText);
+
+												String toSpeak = ocrText;
+												mTTS.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 											}
 										})
 										.addOnFailureListener(
@@ -147,5 +171,16 @@ public class MainActivity extends AppCompatActivity
 															}
 														});
 
+	}
+
+	// deconstructor for TTS
+	@Override
+	protected void onDestroy() {
+		if (mTTS != null) {
+			mTTS.stop();
+			mTTS.shutdown();
+		}
+
+		super.onDestroy();
 	}
 }
