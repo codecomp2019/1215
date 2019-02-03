@@ -1,4 +1,4 @@
-package com.google.firebase.example.mlkit;
+//package com.google.firebase.example.mlkit;
 
 import android.graphics.Point;
 import android.graphics.Rect;
