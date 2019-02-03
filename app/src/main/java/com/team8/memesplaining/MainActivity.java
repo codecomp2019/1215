@@ -2,13 +2,17 @@ package com.team8.memesplaining;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -35,18 +39,27 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent resultData)
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK)
 		{
 			Uri uri;
-			if (resultData != null)
+			if (data != null)
 			{
-				uri = resultData.getData();
+				uri = data.getData();
 				Log.i(TAG, "Uri: " + uri.toString());
 
 				ImageView imgView = findViewById(R.id.image_view);
 				imgView.setImageURI(uri);
+
+				try
+				{
+					Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
