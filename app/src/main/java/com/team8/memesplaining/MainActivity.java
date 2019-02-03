@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity
 				uri = resultData.getData();
 				Log.i(TAG, "Uri: " + uri.toString());
 
+				ImageView imgView = findViewById(R.id.image_view);
+				imgView.setImageURI(uri);
 			}
 		}
 	}
